@@ -4,6 +4,7 @@ var mesh;
 socket = new NodeSocket();
 init();
 animate();
+//startPlot();
 
 function init() {
   camera = new THREE.PerspectiveCamera(
@@ -52,4 +53,41 @@ function animate() {
   }
 
   renderer.render(scene, camera);
+}
+
+function plot(beta) {
+  console.log("plotting");
+  var trace1 = {
+    type: "bar",
+    x: ["beta", "alpha"],
+    y: [beta],
+    marker: {
+      color: "#C8A2C8",
+      line: {
+        width: 2.5
+      }
+    }
+  };
+
+  var data = [trace1];
+
+  var layout = {
+    title: "Plotting",
+    font: { size: 18 }
+  };
+
+  var config = { responsive: true };
+
+  Plotly.newPlot("plot", data, layout, config);
+}
+
+function startPlot() {
+  updateFreq = 250;
+  plot(0);
+  setInterval(() => {
+    Plotly.restyle("plot", "y", [
+      [socket.getBeta() * Math.random(), socket.getBeta() * Math.random()]
+    ]);
+    console.log("updating");
+  }, updateFreq);
 }
